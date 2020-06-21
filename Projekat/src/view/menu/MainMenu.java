@@ -10,12 +10,12 @@ import javax.swing.JToolBar;
 
 import gui.MainWindow;
 import gui.util.ContentPanelType;
-import model.util.TipKorisnika;
+
 
 @SuppressWarnings("serial")
 public class MainMenu extends JToolBar {
 
-	public MainMenu(TipKorisnika loggedInUserType) {
+	public MainMenu() {
 		this.setBackground(Color.decode("#525252"));
 		this.setFloatable(false);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,22 +29,7 @@ public class MainMenu extends JToolBar {
 		btnLekovi.addActionListener(new BtnLekoviActionListener());
 		btnRecepti.addActionListener(new BtnReceptiActionListener());
 		
-		switch(loggedInUserType) {
-			case ADMIN:{
-				MenuButton btnLoyalty = new MenuButton("images/dodatno.png");
-				MenuButton btnAdministrator = new MenuButton("images/administrator.png");
-				add(btnLoyalty);
-				add(btnAdministrator);
-				break;
-			}
-			case APOTEKAR:{
-				MenuButton btnKorpa = new MenuButton("images/korpa.png");
-				add(btnKorpa);
-				break;
-			}
-			default: break;
-		}
-		add(Box.createVerticalGlue());
+
 	}
 	
 	class BtnLekoviActionListener implements ActionListener {
