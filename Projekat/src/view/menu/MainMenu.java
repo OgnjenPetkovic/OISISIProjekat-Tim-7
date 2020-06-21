@@ -10,12 +10,12 @@ import javax.swing.JToolBar;
 
 import gui.MainWindow;
 import gui.util.ContentPanelType;
-
+import model.util.TipKorisnika;
 
 @SuppressWarnings("serial")
 public class MainMenu extends JToolBar {
 
-	public MainMenu() {
+	public MainMenu(TipKorisnika loggedInUserType) {
 		this.setBackground(Color.decode("#525252"));
 		this.setFloatable(false);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,7 +29,23 @@ public class MainMenu extends JToolBar {
 		btnLekovi.addActionListener(new BtnLekoviActionListener());
 		btnRecepti.addActionListener(new BtnReceptiActionListener());
 		
-
+		switch(loggedInUserType) {
+			case ADMIN:{
+				MenuButton btnLoyalty = new MenuButton("images/dodatno.png");
+				MenuButton btnAdministrator = new MenuButton("images/administrator.png");
+				btnAdministrator.addActionListener(new BtnAdministratorActionListener());
+				add(btnLoyalty);
+				add(btnAdministrator);
+				break;
+			}
+			case APOTEKAR:{
+				MenuButton btnKorpa = new MenuButton("images/korpa.png");
+				add(btnKorpa);
+				break;
+			}
+			default: break;
+		}
+		add(Box.createVerticalGlue());
 	}
 	
 	class BtnLekoviActionListener implements ActionListener {
@@ -43,6 +59,13 @@ public class MainMenu extends JToolBar {
 		@Override
 		public void actionPerformed(ActionEvent paramActionEvent) {
 			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.RECEPTI);
+		}
+	}
+	
+	class BtnAdministratorActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent paramActionEvent) {
+			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.ADMINISTRATOR);
 		}
 	}
 }
