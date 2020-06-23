@@ -22,8 +22,8 @@ public class MainMenu extends JToolBar {
 		this.setBorder(null);
 				
 		add(Box.createVerticalGlue());
-		MenuButton btnLekovi= new MenuButton("images/lekovi.png");
-		MenuButton btnRecepti = new MenuButton("images/recepti.png");
+		MenuButton btnLekovi= new MenuButton("images/lekovi.png", "images/lekovi_selektovano.png");
+		MenuButton btnRecepti = new MenuButton("images/recepti.png", "images/recepti_selektovano.png");
 		add(btnLekovi);
 		add(btnRecepti);
 		btnLekovi.addActionListener(new BtnLekoviActionListener());
@@ -31,15 +31,15 @@ public class MainMenu extends JToolBar {
 		
 		switch(loggedInUserType) {
 			case ADMIN:{
-				MenuButton btnLoyalty = new MenuButton("images/dodatno.png");
-				MenuButton btnAdministrator = new MenuButton("images/administrator.png");
+				MenuButton btnLoyalty = new MenuButton("images/dodatno.png", "images/dodatno_selektovano.png");
+				MenuButton btnAdministrator = new MenuButton("images/administrator.png", "images/administrator_selektovano.png");
 				btnAdministrator.addActionListener(new BtnAdministratorActionListener());
 				add(btnLoyalty);
 				add(btnAdministrator);
 				break;
 			}
 			case APOTEKAR:{
-				MenuButton btnKorpa = new MenuButton("images/korpa.png");
+				MenuButton btnKorpa = new MenuButton("images/korpa.png", "images/korpa_selektovano.png");
 				add(btnKorpa);
 				break;
 			}
