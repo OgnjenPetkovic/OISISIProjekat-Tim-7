@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -30,8 +29,8 @@ public abstract class AbstractContentPanel extends JPanel {
 		searchPanel.setMinimumSize(new Dimension(300,300));
 		searchPanel.setMaximumSize(new Dimension(500,600));
 		
-		this.add(details, BorderLayout.NORTH);
-		this.add(searchPanel, BorderLayout.SOUTH);
+		this.add(details);
+		this.add(searchPanel);
 	}
 	
 	public AbstractPanel getParent() {

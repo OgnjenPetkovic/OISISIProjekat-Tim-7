@@ -13,16 +13,18 @@ import view.AbstractDetailsPanel;
 import view.AbstractTablePanel;
 import view.util.CustomTableModel;
 import view.util.DetailsFormState;
+import view.util.renderers.CustomCellRenderer;
 
 @SuppressWarnings("serial")
 public class LekoviTablePanel extends AbstractTablePanel {
 	
 	public LekoviTablePanel(LekoviPanel parent) {
-		super(parent);
+		super(parent, 5);
 		tableModel = new CustomTableModel(Podaci.getInstance().getLekovi());
 		table = new JTable(tableModel);
 		ListSelectionModel lsm = table.getSelectionModel();
 	    lsm.addListSelectionListener(new LekoviTableLSListener());
+	    table.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
 	    
 	    if (!TipKorisnika.ADMIN.equals(Podaci.getInstance().getLoggedInUser().getTip())) {
 			table.removeColumn(table.getColumnModel().getColumn(5));
@@ -32,7 +34,7 @@ public class LekoviTablePanel extends AbstractTablePanel {
 		initGui();
 	}
 	
-	class LekoviTableLSListener implements ListSelectionListener {
+	private class LekoviTableLSListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {

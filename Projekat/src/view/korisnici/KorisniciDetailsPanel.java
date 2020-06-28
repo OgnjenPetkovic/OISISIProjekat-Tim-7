@@ -1,9 +1,7 @@
 package view.korisnici;
 
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 
-import gui.MainWindow;
 import model.Podaci;
 import model.entity.Korisnik;
 import model.util.TipKorisnika;
@@ -11,8 +9,10 @@ import view.AbstractDetailsPanel;
 import view.util.DetailsFormState;
 import view.util.FormLabel;
 import view.util.FormTextField;
+import view.util.Utility;
 import view.util.exceptions.RecordAlreadyExistsException;
 import view.util.exceptions.RecordDoesNotExistException;
+import view.util.renderers.CustomComboBoxRenderer;
 
 @SuppressWarnings("serial")
 public class KorisniciDetailsPanel extends AbstractDetailsPanel {
@@ -70,8 +70,9 @@ public class KorisniciDetailsPanel extends AbstractDetailsPanel {
 		tipLbl = new FormLabel("Tip");
 		add(tipLbl, gBagC);
 		gBagC.gridx+=2;
-		TipKorisnika[] items = {TipKorisnika.APOTEKAR, TipKorisnika.LEKAR, TipKorisnika.ADMIN};
+		TipKorisnika[] items = {TipKorisnika.APOTEKAR, TipKorisnika.LEKAR};
 		tipCbx = new JComboBox<>(items);
+		tipCbx.setRenderer(new CustomComboBoxRenderer());
 		add(tipCbx, gBagC);
 		
 		gBagC.gridy++;
@@ -112,8 +113,7 @@ public class KorisniciDetailsPanel extends AbstractDetailsPanel {
 			Podaci.getInstance().getKorisnici().removeKorisnik(korImeTxtFld.getText());
 			super.delete();
 		} catch (RecordDoesNotExistException e) {
-			JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-					"Korisnik pod tim korisničkim imenom ne postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+			Utility.showErrorMessage(e.getMessage());
 			return;
 		}
 	}
@@ -128,8 +128,7 @@ public class KorisniciDetailsPanel extends AbstractDetailsPanel {
 						prezimeTxtFld.getText(),
 						(TipKorisnika)tipCbx.getSelectedItem());
 			} catch (RecordAlreadyExistsException e) {
-				JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-						"Korisnik pod tim korisničkim imenom već postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+				Utility.showErrorMessage(e.getMessage());
 				return;
 			}
 		} else if (DetailsFormState.EDIT.equals(state)) {
@@ -137,11 +136,9 @@ public class KorisniciDetailsPanel extends AbstractDetailsPanel {
 				Podaci.getInstance().getKorisnici().editKorisnik(korImeTxtFld.getText(),
 						lozinkaTxtFld.getText(),
 						imeTxtFld.getText(),
-						prezimeTxtFld.getText(),
-						(TipKorisnika)tipCbx.getSelectedItem());
+						prezimeTxtFld.getText());
 			} catch (RecordDoesNotExistException e) {
-				JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-						"Korisnik pod tim korisničkim imenom ne postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+				Utility.showErrorMessage(e.getMessage());
 				return;
 			}
 		}
@@ -167,21 +164,31 @@ public class KorisniciDetailsPanel extends AbstractDetailsPanel {
 				break;
 			case ADD:
 				korImeTxtFld.setEditable(true);
+				tipCbx.setEnabled(true);
 			case EDIT:
 				lozinkaTxtFld.setEditable(true);
 				imeTxtFld.setEditable(true);
-				tipCbx.setEnabled(true);
 				prezimeTxtFld.setEditable(true);
 		}
 	}
 	
+	@Override
+	protected int isFormValid() {
+		if (korImeTxtFld.getText().isEmpty() || lozinkaTxtFld.getText().isEmpty() 
+				|| imeTxtFld.getText().isEmpty() || prezimeTxtFld.getText().isEmpty()) {
+			return 0;
+		} 
+		return super.isFormValid();
+	}
+	
+	@Override
 	public void insertTableData(Object rowData) {
 		if (rowData instanceof Korisnik) {
 			korImeTxtFld.setText(((Korisnik)rowData).getKorisnickoIme());
         	lozinkaTxtFld.setText(((Korisnik)rowData).getLozinka());
         	imeTxtFld.setText(((Korisnik)rowData).getIme());
         	prezimeTxtFld.setText(((Korisnik)rowData).getPrezime());
-        	tipCbx.setSelectedItem(((Korisnik)rowData).getTip().getOpis());
+        	tipCbx.setSelectedItem(((Korisnik)rowData).getTip());
 		}
 	}
 

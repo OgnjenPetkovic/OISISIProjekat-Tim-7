@@ -8,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.JTableHeader;
@@ -26,9 +27,11 @@ public abstract class AbstractTablePanel extends JPanel {
 	protected JTable table;
 	protected RowFilter<Object, Object> initialRF;
 	protected TableRowSorter<CustomTableModel> tableRowSorter;
+	protected int obrisanColumnIndex;
 	
-	protected AbstractTablePanel(AbstractPanel parent) {
+	protected AbstractTablePanel(AbstractPanel parent, int obrisanColumnIndex) {
 		this.parent = parent;
+		this.obrisanColumnIndex = obrisanColumnIndex;
 	}
 	
 	protected void initGui() {
@@ -39,6 +42,7 @@ public abstract class AbstractTablePanel extends JPanel {
 		table.setBorder(new MatteBorder(2,0,0,0, Color.BLACK));
 		table.setBackground(Color.decode("#B2B2B2"));
 		table.setForeground(Color.BLACK);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JTableHeader header = table.getTableHeader();
 		header.setReorderingAllowed(false);
 		header.setDefaultRenderer(new TableHeader(header.getDefaultRenderer()));
@@ -62,6 +66,10 @@ public abstract class AbstractTablePanel extends JPanel {
 
 	public JTable getTable() {
 		return table;
+	}
+	
+	public int getObrisanColumnIndex() {
+		return obrisanColumnIndex;
 	}
 	
 	public void filterRows(List<RowFilter<Object,Object>> filters) {

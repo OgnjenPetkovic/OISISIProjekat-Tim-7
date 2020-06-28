@@ -18,9 +18,12 @@ import gui.util.ContentPanelType;
 import model.Podaci;
 import model.entity.Korisnik;
 import model.util.TipKorisnika;
+import view.korisnici.KorisniciPanel;
+import view.korpa.KorpaPanel;
 import view.lekovi.LekoviPanel;
 import view.menu.MainMenu;
 import view.recepti.ReceptiPanel;
+import view.report.ReportPanel;
 
 
 @SuppressWarnings("serial")
@@ -62,16 +65,25 @@ public class MainWindow extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
-		LekoviPanel lekoviContentPanel = new LekoviPanel();
+		LekoviPanel lekoviContentPanel = new LekoviPanel(TipKorisnika.LEKAR.equals(loggedInUser.getTip()));
 		contentPanels.put(ContentPanelType.LEKOVI, lekoviContentPanel);
-		ReceptiPanel receptiContentPanel = new ReceptiPanel();
-		contentPanels.put(ContentPanelType.RECEPTI, receptiContentPanel);
 		
 		switch(loggedInUserType) {
-			case ADMIN:{
+			case ADMIN: {
+				KorisniciPanel korisniciContentPanel = new KorisniciPanel();
+				contentPanels.put(ContentPanelType.ADMINISTRATOR, korisniciContentPanel);
+				ReportPanel reportContentPanel = new ReportPanel();
+				contentPanels.put(ContentPanelType.REPORT, reportContentPanel);
 				break;
 			}
-			case APOTEKAR:{
+			
+			case APOTEKAR: {
+				KorpaPanel korpaContentPanel = new KorpaPanel();
+				contentPanels.put(ContentPanelType.KORPA, korpaContentPanel);
+			}
+			case LEKAR: {
+				ReceptiPanel receptiContentPanel = new ReceptiPanel(TipKorisnika.APOTEKAR.equals(loggedInUser.getTip()));
+				contentPanels.put(ContentPanelType.RECEPTI, receptiContentPanel);
 				break;
 			}
 			default: break;
@@ -92,14 +104,16 @@ public class MainWindow extends JFrame{
 	
 	public void replaceCurrentContent(ContentPanelType newContent) {
 		if (!currentContent.equals(newContent))
+		{
 			remove(contentPanels.get(currentContent));
-		add(contentPanels.get(newContent));
-		currentContent = newContent;
-		repaint();
-		revalidate();
+			add(contentPanels.get(newContent));
+			currentContent = newContent;
+			repaint();
+			revalidate();
+		}
 	}
 	
-	class ImagePanel extends JPanel {
+	private class ImagePanel extends JPanel {
 		
 		private Image img;
 		
@@ -117,7 +131,7 @@ public class MainWindow extends JFrame{
 		}
 	}
 
-	class MainWindowListener implements WindowListener {
+	private class MainWindowListener implements WindowListener {
 
 		@Override
 		public void windowOpened(WindowEvent e) {

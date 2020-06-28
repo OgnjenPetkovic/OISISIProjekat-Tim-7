@@ -2,6 +2,6 @@ package gui.util;
 
 public enum ContentPanelType {
 	
-	INIT, LEKOVI, RECEPTI, ADMINISTRATOR;
+	INIT, LEKOVI, RECEPTI, ADMINISTRATOR, KORPA, REPORT;
 
 }

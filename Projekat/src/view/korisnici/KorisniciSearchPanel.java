@@ -1,16 +1,15 @@
 package view.korisnici;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
 import javax.swing.RowFilter;
 
 import model.util.TipKorisnika;
 import view.AbstractSearchPanel;
 import view.util.FormLabel;
 import view.util.FormTextField;
+import view.util.renderers.CustomComboBoxRenderer;
 
 @SuppressWarnings("serial")
 public class KorisniciSearchPanel extends AbstractSearchPanel {
@@ -47,8 +46,10 @@ public class KorisniciSearchPanel extends AbstractSearchPanel {
 		tipLbl = new FormLabel("Tip");
 		add(tipLbl, gBagC);
 		gBagC.gridx+=2;
-		TipKorisnika[] items = {null, TipKorisnika.APOTEKAR, TipKorisnika.LEKAR, TipKorisnika.ADMIN};
+		TipKorisnika[] items = {TipKorisnika.NONE, TipKorisnika.APOTEKAR, TipKorisnika.LEKAR, TipKorisnika.ADMIN};
 		tipCbx = new JComboBox<>(items);
+		tipCbx.setRenderer(new CustomComboBoxRenderer());
+		tipCbx.getRenderer();
 		add(tipCbx, gBagC);
 		
 		gBagC.gridy++;
@@ -57,32 +58,32 @@ public class KorisniciSearchPanel extends AbstractSearchPanel {
 		gBagC.gridx+=2;
 		add(clear, gBagC);
 		
-		search.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent paramActionEvent) {
-				ArrayList<RowFilter<Object,Object>> filters = new ArrayList<>();
-				if (!imeTxtFld.getText().isEmpty()) {
-					filters.add(RowFilter.regexFilter("(?i)" + imeTxtFld.getText(), 0));
-				}
-				if (!prezimeTxtFld.getText().isEmpty()) {
-					filters.add(RowFilter.regexFilter("(?i)" + prezimeTxtFld.getText(), 1));
-				}
-				TipKorisnika userType = (TipKorisnika) tipCbx.getSelectedItem();
-				if (userType != null) {
-					filters.add(RowFilter.regexFilter("(?i)" + userType.getOpis(), 4));
-				}
-				parent.getParent().getTablePanel().filterRows(filters);
-			}
-		});
-		
-		clear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent paramActionEvent) {
-				imeTxtFld.setText("");
-				prezimeTxtFld.setText("");
-				tipCbx.setSelectedItem("");
-				parent.getParent().getTablePanel().clearRowFilters();
-			}
-		});
 	}
+
+	@Override
+	protected void clear() {
+		super.clear();
+		imeTxtFld.setText("");
+		prezimeTxtFld.setText("");
+		tipCbx.setSelectedItem(null);
+		parent.getParent().getTablePanel().clearRowFilters();
+	}
+
+	@Override
+	protected void search() {
+		super.search();
+		ArrayList<RowFilter<Object,Object>> filters = new ArrayList<>();
+		if (!imeTxtFld.getText().isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + imeTxtFld.getText(), 0));
+		}
+		if (!prezimeTxtFld.getText().isEmpty()) {
+			filters.add(RowFilter.regexFilter("(?i)" + prezimeTxtFld.getText(), 1));
+		}
+		TipKorisnika userType = (TipKorisnika) tipCbx.getSelectedItem();
+		if (userType != null && !TipKorisnika.NONE.equals(userType)) {
+			filters.add(RowFilter.regexFilter("(?i)" + userType, 4));
+		}
+		parent.getParent().getTablePanel().filterRows(filters);
+	}
+	
 }

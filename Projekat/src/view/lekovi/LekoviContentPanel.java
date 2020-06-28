@@ -5,11 +5,9 @@ import view.AbstractContentPanel;
 @SuppressWarnings("serial")
 public class LekoviContentPanel extends AbstractContentPanel {
 	
-	String[] pretrage = {"Šifra leka", "Ime leka", "Proizvođač", "Opseg cene"};
-	
-	public LekoviContentPanel(LekoviPanel parent) {
+	public LekoviContentPanel(LekoviPanel parent, boolean readonly) {
 		super(parent);
-		details = new LekoviDetailsPanel(this);
+		details = new LekoviDetailsPanel(this, readonly);
 		searchPanel = new LekoviSearchPanel(this);
 		initGui();
 	}

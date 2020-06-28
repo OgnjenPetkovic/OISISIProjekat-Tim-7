@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import model.Podaci;
 import model.entity.Lek;
 import view.util.exceptions.RecordAlreadyExistsException;
 import view.util.exceptions.RecordDoesNotExistException;
+import view.util.exceptions.RelatedRecordFound;
 
 public class Lekovi implements ITableData {
 	
@@ -66,7 +68,7 @@ public class Lekovi implements ITableData {
 	
 	public void addNewLek(String sifra, String naziv, String proizvodjac, boolean naRecept, float cena) throws RecordAlreadyExistsException {
 		if (findBySifra(sifra) != null) {
-			throw new RecordAlreadyExistsException();
+			throw new RecordAlreadyExistsException("Lek pod tom šifrom već postoji!");
 		} else {
 			data.add(new Lek(sifra, naziv, proizvodjac, naRecept, cena, false));
 		}
@@ -75,7 +77,7 @@ public class Lekovi implements ITableData {
 	public void editLek(String sifra, String naziv, String proizvodjac, boolean naRecept, float cena) throws RecordDoesNotExistException {
 		Lek existingLek = findBySifra(sifra);
 		if (existingLek == null) {
-			throw new RecordDoesNotExistException();
+			throw new RecordDoesNotExistException("Lek pod tom šifrom ne postoji!");
 		} else {
 			existingLek.setNaziv(naziv);
 			existingLek.setProizvodjac(proizvodjac);
@@ -84,11 +86,14 @@ public class Lekovi implements ITableData {
 		}
 	}
 	
-	public void removeLek(String sifra) throws RecordDoesNotExistException {
+	public void removeLek(String sifra) throws RecordDoesNotExistException, RelatedRecordFound {
 		Lek existingLek = findBySifra(sifra);
 		if (existingLek == null) {
-			throw new RecordDoesNotExistException();
+			throw new RecordDoesNotExistException("Lek pod tom šifrom ne postoji!");
 		} else {
+			if (Podaci.getInstance().getRecepti().findBySifraLeka(sifra) != null) {
+				throw new RelatedRecordFound("Ne možete obrisati lek koji se nalazi na postojećim receptima!");
+			}
 			existingLek.setObrisan(true);
 		}
 	}

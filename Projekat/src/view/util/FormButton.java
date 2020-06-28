@@ -1,6 +1,7 @@
 package view.util;
 
 import java.awt.Color;
+import java.awt.Cursor;
 
 import javax.swing.JButton;
 
@@ -13,6 +14,7 @@ public class FormButton extends JButton {
 		setFocusPainted(false);
 		setBackground(Color.GRAY);
 		setForeground(Color.WHITE);
+		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
 	public FormButton(String label, boolean visible) {

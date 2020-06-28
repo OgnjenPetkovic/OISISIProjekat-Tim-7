@@ -12,10 +12,10 @@ import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class MenuButton extends JButton {
-
-	ImageIcon ic;
-	ImageIcon hoverIC;
 	
+	private ImageIcon ic;
+	private ImageIcon hoverIC;
+
 	public MenuButton(String pathToImg, String hoverImg) {
 		super("");
 		ic = new ImageIcon(pathToImg);
@@ -36,11 +36,10 @@ public class MenuButton extends JButton {
 		setIcon(ic);
 	}
 	
-	class MenuButtonMouseListener implements MouseListener{
+	private class MenuButtonMouseListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent paramMouseEvent) {
-			// TODO Auto-generated method stub
 		}
 
 		@Override
@@ -55,15 +54,12 @@ public class MenuButton extends JButton {
 
 		@Override
 		public void mousePressed(MouseEvent paramMouseEvent) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent paramMouseEvent) {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	}
+	
 }

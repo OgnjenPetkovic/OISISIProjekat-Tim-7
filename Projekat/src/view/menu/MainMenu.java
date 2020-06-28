@@ -23,23 +23,31 @@ public class MainMenu extends JToolBar {
 				
 		add(Box.createVerticalGlue());
 		MenuButton btnLekovi= new MenuButton("images/lekovi.png", "images/lekovi_selektovano.png");
-		MenuButton btnRecepti = new MenuButton("images/recepti.png", "images/recepti_selektovano.png");
 		add(btnLekovi);
-		add(btnRecepti);
 		btnLekovi.addActionListener(new BtnLekoviActionListener());
-		btnRecepti.addActionListener(new BtnReceptiActionListener());
 		
 		switch(loggedInUserType) {
 			case ADMIN:{
-				MenuButton btnLoyalty = new MenuButton("images/dodatno.png", "images/dodatno_selektovano.png");
+				MenuButton btnReport = new MenuButton("images/dodatno.png", "images/dodatno_selektovano.png");
 				MenuButton btnAdministrator = new MenuButton("images/administrator.png", "images/administrator_selektovano.png");
 				btnAdministrator.addActionListener(new BtnAdministratorActionListener());
-				add(btnLoyalty);
+				btnReport.addActionListener(new BtnReportActionListener());
+				add(btnReport);
 				add(btnAdministrator);
 				break;
 			}
+			case LEKAR: {
+				MenuButton btnRecepti = new MenuButton("images/recepti.png", "images/recepti_selektovano.png");
+				add(btnRecepti);
+				btnRecepti.addActionListener(new BtnReceptiActionListener());
+				break;
+			}
 			case APOTEKAR:{
+				MenuButton btnRecepti = new MenuButton("images/recepti.png", "images/recepti_selektovano.png");
 				MenuButton btnKorpa = new MenuButton("images/korpa.png", "images/korpa_selektovano.png");
+				btnRecepti.addActionListener(new BtnReceptiActionListener());
+				btnKorpa.addActionListener(new BtnKorpaActionListener());
+				add(btnRecepti);
 				add(btnKorpa);
 				break;
 			}
@@ -48,24 +56,40 @@ public class MainMenu extends JToolBar {
 		add(Box.createVerticalGlue());
 	}
 	
-	class BtnLekoviActionListener implements ActionListener {
+	private class BtnLekoviActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent paramActionEvent) {
 			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.LEKOVI);
 		}
 	}
 	
-	class BtnReceptiActionListener implements ActionListener {
+	private class BtnReceptiActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent paramActionEvent) {
 			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.RECEPTI);
 		}
 	}
 	
-	class BtnAdministratorActionListener implements ActionListener {
+	private class BtnAdministratorActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent paramActionEvent) {
 			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.ADMINISTRATOR);
 		}
+	}
+	
+	private class BtnKorpaActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent paramActionEvent) {
+			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.KORPA);
+		}
+	}
+	
+	private class BtnReportActionListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			MainWindow.getInstance().replaceCurrentContent(ContentPanelType.REPORT);
+		}
+		
 	}
 }

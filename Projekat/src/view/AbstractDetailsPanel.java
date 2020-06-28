@@ -11,13 +11,17 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 
 import gui.MainWindow;
 import view.util.DetailsFormState;
 import view.util.FormButton;
+import view.util.Utility;
 
 @SuppressWarnings("serial")
 public abstract class AbstractDetailsPanel extends JPanel {
+	
+	private static String[] yesNoButtons = { "Da", "Ne" };
 
 	protected DetailsFormState state;
 	protected AbstractContentPanel parent;
@@ -72,7 +76,13 @@ public abstract class AbstractDetailsPanel extends JPanel {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirm();
+				int isValid = isFormValid();
+				if (isValid == 1) {
+					confirm();
+				} else if (isValid == 0){
+					Utility.showErrorMessage("Morate popuniti sva polja!");
+				}
+				//Ako nije ni 0 ni 1, onda je custom poruka validacije
 			}
 		});
 		
@@ -126,13 +136,16 @@ public abstract class AbstractDetailsPanel extends JPanel {
 	}
 	
 	private void confirmDeletion() {
-		int selectedRow = parent.getParent().getTablePanel().getTable().getSelectedRow();
-		if (DetailsFormState.DETAILS.equals(state) && selectedRow != -1) {
-			int confirmation = JOptionPane.showConfirmDialog(
-				    MainWindow.getInstance(),
-				    "Da li ste sigurni?",
-				    "Potvrda brisanja",
-				    JOptionPane.YES_NO_OPTION);
+		AbstractTablePanel tablePanel = parent.getParent().getTablePanel();
+		JTable table = tablePanel.getTable();
+		int selectedRow = table.getSelectedRow();
+		String obrisan = (String) table.getValueAt(selectedRow, tablePanel.getObrisanColumnIndex());
+		if (DetailsFormState.DETAILS.equals(state) && selectedRow != -1 && !"Da".equalsIgnoreCase(obrisan)) {
+			int confirmation = JOptionPane.showOptionDialog(MainWindow.getInstance(),
+					"Da li ste sigurni?", 
+					"Potvrda brisanja", 
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
+					yesNoButtons, yesNoButtons[0]);
 			if (JOptionPane.YES_OPTION == confirmation) {
 				delete();
 			}
@@ -142,6 +155,10 @@ public abstract class AbstractDetailsPanel extends JPanel {
 	protected void delete() {
 		clearFields();
 		parent.getParent().getTablePanel().getTableModel().fireTableDataChanged();
+	}
+	
+	protected int isFormValid() {
+		return 1;
 	}
 	
 	protected void confirm() {

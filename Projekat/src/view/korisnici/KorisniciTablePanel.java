@@ -11,21 +11,23 @@ import view.AbstractDetailsPanel;
 import view.AbstractTablePanel;
 import view.util.CustomTableModel;
 import view.util.DetailsFormState;
+import view.util.renderers.CustomCellRenderer;
 
 @SuppressWarnings("serial")
 public class KorisniciTablePanel extends AbstractTablePanel {
 	
 	public KorisniciTablePanel(KorisniciPanel parent) {
-		super(parent);
+		super(parent, 5);
 		tableModel = new CustomTableModel(Podaci.getInstance().getKorisnici());
 		table = new JTable(tableModel);
+		table.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
 		ListSelectionModel lsm = table.getSelectionModel();
 	    lsm.addListSelectionListener(new KorisniciTableLSListener());
 	    
 		initGui();
 	}
 	
-	class KorisniciTableLSListener implements ListSelectionListener {
+	private class KorisniciTableLSListener implements ListSelectionListener {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {

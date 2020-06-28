@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JPanel;
 
+import view.util.DetailsFormState;
 import view.util.FormButton;
 
 @SuppressWarnings("serial")
@@ -34,6 +37,24 @@ public abstract class AbstractSearchPanel extends JPanel {
 		gBagC.gridy = -1;
 		gBagC.weighty = 1.0;
 		gBagC.insets = new Insets(5,3,5,3);
+		
+		search.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent paramActionEvent) {
+				if (DetailsFormState.DETAILS.equals(parent.getDetails().getState())) {
+					search();
+				}
+			}
+		});
+		
+		clear.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent paramActionEvent) {
+				if (DetailsFormState.DETAILS.equals(parent.getDetails().getState())) {
+					clear();
+				}
+			}
+		});
 	}
 	
 	protected void addSpacing() {
@@ -41,6 +62,14 @@ public abstract class AbstractSearchPanel extends JPanel {
 		add(Box.createVerticalGlue(), gBagC);
 		add(Box.createHorizontalStrut(80), gBagC);
 		add(Box.createVerticalStrut(20), gBagC);
+	}
+	
+	protected void clear() {
+		parent.getDetails().clearFields();
+	}
+	
+	protected void search() {
+		parent.getDetails().clearFields();
 	}
 	
 }

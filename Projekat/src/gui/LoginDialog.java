@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -10,16 +11,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import model.Podaci;
 import model.entity.Korisnik;
+import view.util.CustomPasswordField;
+import view.util.FormButton;
+import view.util.FormLabel;
+import view.util.FormTextField;
 
 public class LoginDialog {
 		
@@ -34,15 +35,17 @@ public class LoginDialog {
 		loginDialog.setMinimumSize(new Dimension(250,150));
 		
 		JPanel panCenter = new JPanel(new GridLayout(4,2));
+		panCenter.setBackground(Color.decode("#565857"));
 		JPanel panSouth = new JPanel(new FlowLayout(FlowLayout.RIGHT)); 
+		panSouth.setBackground(Color.decode("#565857"));
 		
-		JLabel usernameLbl = new JLabel("Korisničko ime");
-		JLabel passwordLbl = new JLabel("Lozinka");
-		JTextField usernameTxtFld = new JTextField();
-		JPasswordField passwordFld = new JPasswordField();
+		FormLabel usernameLbl = new FormLabel("Korisničko ime");
+		FormLabel passwordLbl = new FormLabel("Lozinka");
+		FormTextField usernameTxtFld = new FormTextField();
+		CustomPasswordField passwordFld = new CustomPasswordField();
 		
-		JButton confirm = new JButton("Potvrdi");
-		JButton cancel = new JButton("Odustani");
+		FormButton confirm = new FormButton("Potvrdi");
+		FormButton cancel = new FormButton("Odustani");
 		
 		usernameTxtFld.addKeyListener(new KeyListener() {
 			@Override

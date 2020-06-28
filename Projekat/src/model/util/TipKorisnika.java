@@ -4,7 +4,8 @@ public enum TipKorisnika {
 
 	LEKAR("Lekar"), 
 	APOTEKAR("Apotekar"),
-	ADMIN("Administrator");
+	ADMIN("Administrator"),
+	NONE(" ");
 	
 	private String opis;
 	

@@ -1,17 +1,18 @@
 package view.lekovi;
 
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 
-import gui.MainWindow;
 import model.Podaci;
 import model.entity.Lek;
 import view.AbstractDetailsPanel;
 import view.util.DetailsFormState;
 import view.util.FormLabel;
 import view.util.FormTextField;
+import view.util.Utility;
 import view.util.exceptions.RecordAlreadyExistsException;
 import view.util.exceptions.RecordDoesNotExistException;
+import view.util.exceptions.RelatedRecordFound;
+import view.util.filters.CustomFloatFilter;
 
 @SuppressWarnings("serial")
 public class LekoviDetailsPanel extends AbstractDetailsPanel {
@@ -28,7 +29,7 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 	private JComboBox<String> naReceptCbx;
 	
 	
-	public LekoviDetailsPanel(LekoviContentPanel parent) {
+	public LekoviDetailsPanel(LekoviContentPanel parent, boolean readonly) {
 		super(parent);
 		initGui();
 		
@@ -70,18 +71,20 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 		cenaLbl = new FormLabel("Cena");
 		add(cenaLbl, gBagC);
 		gBagC.gridx+=2;
-		cenaTxtFld = new FormTextField();
+		cenaTxtFld = new FormTextField(new CustomFloatFilter());
 		add(cenaTxtFld, gBagC);
 		
-		gBagC.gridy++;
-		gBagC.gridx = 0;
-		add(add, gBagC);
-		add(confirm, gBagC);
-		gBagC.gridx++;
-		add(edit, gBagC);
-		gBagC.gridx++;
-		add(delete, gBagC);
-		add(cancel, gBagC);
+		if (!readonly) {
+			gBagC.gridy++;
+			gBagC.gridx = 0;
+			add(add, gBagC);
+			add(confirm, gBagC);
+			gBagC.gridx++;
+			add(edit, gBagC);
+			gBagC.gridx++;
+			add(delete, gBagC);
+			add(cancel, gBagC);
+		}
 
 		changeFormState(DetailsFormState.DETAILS);
 	}
@@ -110,9 +113,8 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 		try {
 			Podaci.getInstance().getLekovi().removeLek(sifraTxtFld.getText());
 			super.delete();
-		} catch (RecordDoesNotExistException e) {
-			JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-					"Lek pod tom šifrom ne postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+		} catch (RecordDoesNotExistException | RelatedRecordFound e) {
+			Utility.showErrorMessage(e.getMessage());
 			return;
 		}
 	}
@@ -128,8 +130,7 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 						naReceptValue.equalsIgnoreCase("Da")?true:false,
 						Float.parseFloat(cenaTxtFld.getText()));
 			} catch (RecordAlreadyExistsException e) {
-				JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-						"Lek pod tom šifrom već postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+				Utility.showErrorMessage(e.getMessage());
 				return;
 			}
 		} else if (DetailsFormState.EDIT.equals(state)) {
@@ -140,8 +141,7 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 						naReceptValue.equalsIgnoreCase("Da")?true:false,
 						Float.parseFloat(cenaTxtFld.getText()));
 			} catch (RecordDoesNotExistException e) {
-				JOptionPane.showMessageDialog(MainWindow.getInstance(), 
-						"Lek pod tom šifrom ne postoji!", "Greška", JOptionPane.ERROR_MESSAGE);
+				Utility.showErrorMessage(e.getMessage());
 				return;
 			}
 		}
@@ -152,6 +152,15 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 	@Override
 	protected void cancel() {
 		super.cancel();
+	}
+	
+	@Override
+	protected int isFormValid() {
+		if (sifraTxtFld.getText().isEmpty() || nazivTxtFld.getText().isEmpty() 
+				|| proizvTxtFld.getText().isEmpty() || cenaTxtFld.getText().isEmpty()) {
+			return 0;
+		} 
+		return super.isFormValid();
 	}
 	
 	@Override
@@ -175,6 +184,7 @@ public class LekoviDetailsPanel extends AbstractDetailsPanel {
 		}
 	}
 	
+	@Override
 	public void insertTableData(Object rowData) {
 		if (rowData instanceof Lek) {
 			sifraTxtFld.setText(((Lek)rowData).getSifra());

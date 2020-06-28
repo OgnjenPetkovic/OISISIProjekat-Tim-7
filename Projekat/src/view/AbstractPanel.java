@@ -1,7 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
-
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -13,8 +11,8 @@ public abstract class AbstractPanel extends JPanel {
 
 	protected void initGui() {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		add(tablePanel, BorderLayout.WEST);
-		add(contentPanel, BorderLayout.EAST);
+		add(tablePanel);
+		add(contentPanel);
 	}
 	
 	public AbstractTablePanel getTablePanel() {

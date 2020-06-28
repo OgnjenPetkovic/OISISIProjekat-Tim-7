@@ -47,34 +47,37 @@ public class Korisnici implements ITableData {
 	@JsonIgnore
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch(columnIndex){
-		case 0: return data.get(rowIndex).getKorisnickoIme();
-		case 1: return data.get(rowIndex).getLozinka();
-		case 2: return data.get(rowIndex).getIme();
-		case 3: return data.get(rowIndex).getPrezime();
-		case 4: return data.get(rowIndex).getTip().getOpis();
-		case 5: return (data.get(rowIndex).isObrisan()?"Da":"Ne");
-		default: return "";
-	}
+			case 0: return data.get(rowIndex).getKorisnickoIme();
+			case 1: return data.get(rowIndex).getLozinka();
+			case 2: return data.get(rowIndex).getIme();
+			case 3: return data.get(rowIndex).getPrezime();
+			case 4: return data.get(rowIndex).getTip();
+			case 5: return (data.get(rowIndex).isObrisan()?"Da":"Ne");
+			default: return "";
+		}
 	}
 
 	@Override
 	@JsonIgnore
 	public Class<?> getColumnClass(int columnIndex) {
-		return String.class;
+		switch(columnIndex) {
+			case 4: return TipKorisnika.class;
+			default: return String.class;
+		}
 	}
 	
 	public void addNewKorisnik(String korIme, String lozinka, String ime, String prezime, TipKorisnika tip) throws RecordAlreadyExistsException {
 		if (findByKorImeAndLozinka(korIme, lozinka) != null) {
-			throw new RecordAlreadyExistsException();
+			throw new RecordAlreadyExistsException("Korisnik pod tim korisničkim imenom već postoji!");
 		} else {
 			data.add(new Korisnik(korIme, lozinka, ime, prezime, tip, false));
 		}
 	}
 	
-	public void editKorisnik(String korIme, String lozinka, String ime, String prezime, TipKorisnika tip) throws RecordDoesNotExistException {
+	public void editKorisnik(String korIme, String lozinka, String ime, String prezime) throws RecordDoesNotExistException {
 		Korisnik existingKorisnik = findByKorIme(korIme);
 		if (existingKorisnik == null) {
-			throw new RecordDoesNotExistException();
+			throw new RecordDoesNotExistException("Korisnik pod tim korisničkim imenom ne postoji!");
 		} else {
 			existingKorisnik.setKorisnickoIme(korIme);
 			existingKorisnik.setLozinka(lozinka);
@@ -86,7 +89,7 @@ public class Korisnici implements ITableData {
 	public void removeKorisnik(String korIme) throws RecordDoesNotExistException {
 		Korisnik existingKorisnik = findByKorIme(korIme);
 		if (existingKorisnik == null) {
-			throw new RecordDoesNotExistException();
+			throw new RecordDoesNotExistException("Korisnik pod tim korisničkim imenom ne postoji!");
 		} else {
 			existingKorisnik.setObrisan(true);
 		}
