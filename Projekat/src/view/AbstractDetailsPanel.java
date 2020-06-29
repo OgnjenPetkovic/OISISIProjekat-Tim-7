@@ -139,8 +139,7 @@ public abstract class AbstractDetailsPanel extends JPanel {
 		AbstractTablePanel tablePanel = parent.getParent().getTablePanel();
 		JTable table = tablePanel.getTable();
 		int selectedRow = table.getSelectedRow();
-		String obrisan = (String) table.getValueAt(selectedRow, tablePanel.getObrisanColumnIndex());
-		if (DetailsFormState.DETAILS.equals(state) && selectedRow != -1 && !"Da".equalsIgnoreCase(obrisan)) {
+		if (DetailsFormState.DETAILS.equals(state) && selectedRow != -1 && !tablePanel.isObrisan((String) table.getValueAt(selectedRow, 0))) {
 			int confirmation = JOptionPane.showOptionDialog(MainWindow.getInstance(),
 					"Da li ste sigurni?", 
 					"Potvrda brisanja", 

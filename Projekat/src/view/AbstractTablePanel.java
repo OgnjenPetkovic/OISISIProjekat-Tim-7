@@ -27,11 +27,9 @@ public abstract class AbstractTablePanel extends JPanel {
 	protected JTable table;
 	protected RowFilter<Object, Object> initialRF;
 	protected TableRowSorter<CustomTableModel> tableRowSorter;
-	protected int obrisanColumnIndex;
 	
-	protected AbstractTablePanel(AbstractPanel parent, int obrisanColumnIndex) {
+	protected AbstractTablePanel(AbstractPanel parent) {
 		this.parent = parent;
-		this.obrisanColumnIndex = obrisanColumnIndex;
 	}
 	
 	protected void initGui() {
@@ -68,10 +66,6 @@ public abstract class AbstractTablePanel extends JPanel {
 		return table;
 	}
 	
-	public int getObrisanColumnIndex() {
-		return obrisanColumnIndex;
-	}
-	
 	public void filterRows(List<RowFilter<Object,Object>> filters) {
 		if (!TipKorisnika.ADMIN.equals(Podaci.getInstance().getLoggedInUser().getTip())) {
 			filters.add(initialRF);
@@ -87,6 +81,10 @@ public abstract class AbstractTablePanel extends JPanel {
 			tableRowSorter.setRowFilter(null);
 		}
 		table.setRowSorter(tableRowSorter);
+	}
+	
+	protected boolean isObrisan(String uniqueColumnValue) {
+		return false;
 	}
 	
 }

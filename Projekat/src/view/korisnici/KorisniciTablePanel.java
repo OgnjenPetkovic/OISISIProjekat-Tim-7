@@ -17,7 +17,7 @@ import view.util.renderers.CustomCellRenderer;
 public class KorisniciTablePanel extends AbstractTablePanel {
 	
 	public KorisniciTablePanel(KorisniciPanel parent) {
-		super(parent, 5);
+		super(parent);
 		tableModel = new CustomTableModel(Podaci.getInstance().getKorisnici());
 		table = new JTable(tableModel);
 		table.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
@@ -25,6 +25,16 @@ public class KorisniciTablePanel extends AbstractTablePanel {
 	    lsm.addListSelectionListener(new KorisniciTableLSListener());
 	    
 		initGui();
+	}
+	
+	@Override
+	protected boolean isObrisan(String uniqueColumnValue) {
+		Korisnik korisnik = Podaci.getInstance().getKorisnici().findByKorIme(uniqueColumnValue);
+		if (korisnik != null) {
+			return korisnik.isObrisan();
+		} else {
+			return true;
+		}
 	}
 	
 	private class KorisniciTableLSListener implements ListSelectionListener {

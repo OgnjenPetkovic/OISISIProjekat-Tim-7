@@ -19,7 +19,7 @@ import view.util.renderers.CustomCellRenderer;
 public class LekoviTablePanel extends AbstractTablePanel {
 	
 	public LekoviTablePanel(LekoviPanel parent) {
-		super(parent, 5);
+		super(parent);
 		tableModel = new CustomTableModel(Podaci.getInstance().getLekovi());
 		table = new JTable(tableModel);
 		ListSelectionModel lsm = table.getSelectionModel();
@@ -34,6 +34,16 @@ public class LekoviTablePanel extends AbstractTablePanel {
 		initGui();
 	}
 	
+	@Override
+	protected boolean isObrisan(String uniqueColumnValue) {
+		Lek lek = Podaci.getInstance().getLekovi().findBySifra((String)uniqueColumnValue);
+		if (lek != null) {
+			return lek.isObrisan();
+		} else {
+			return true;
+		}
+	}
+
 	private class LekoviTableLSListener implements ListSelectionListener {
 
 		@Override

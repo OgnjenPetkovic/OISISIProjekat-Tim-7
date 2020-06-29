@@ -19,7 +19,7 @@ import view.util.renderers.CustomCellRenderer;
 public class ReceptiTablePanel extends AbstractTablePanel {
 
 	public ReceptiTablePanel(ReceptiPanel parent) {
-		super(parent, 7);
+		super(parent);
 		tableModel = new CustomTableModel(Podaci.getInstance().getRecepti());
 		table = new JTable(tableModel);
 		ListSelectionModel lsm = table.getSelectionModel();
@@ -35,6 +35,16 @@ public class ReceptiTablePanel extends AbstractTablePanel {
 		initialRF = RowFilter.regexFilter("Ne", 7);
 	    
 		initGui();
+	}
+	
+	@Override
+	protected boolean isObrisan(String uniqueColumnValue) {
+		Recept recept = Podaci.getInstance().getRecepti().findBySifra(Integer.parseInt(uniqueColumnValue));
+		if (recept != null) {
+			return recept.isObrisan();
+		} else {
+			return true;
+		}
 	}
 	
 	private class ReceptiTableLSListener implements ListSelectionListener {

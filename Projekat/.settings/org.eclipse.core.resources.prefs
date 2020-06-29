@@ -1,5 +1,17 @@
 eclipse.preferences.version=1
+encoding//src/gui/LoginDialog.java=UTF-8
+encoding//src/model/Podaci.java=UTF-8
 encoding//src/model/collections/Korisnici.java=UTF-8
+encoding//src/model/collections/Korpa.java=UTF-8
+encoding//src/model/collections/Lekovi.java=UTF-8
+encoding//src/model/collections/Recepti.java=UTF-8
+encoding//src/view/korisnici/KorisniciContentPanel.java=UTF-8
+encoding//src/view/korisnici/KorisniciDetailsPanel.java=UTF-8
+encoding//src/view/korisnici/KorisniciSearchPanel.java=UTF-8
+encoding//src/view/korpa/KorpaCheckoutPanel.java=UTF-8
 encoding//src/view/lekovi/LekoviContentPanel.java=UTF-8
 encoding//src/view/lekovi/LekoviDetailsPanel.java=UTF-8
 encoding//src/view/lekovi/LekoviSearchPanel.java=UTF-8
+encoding//src/view/recepti/ReceptiDetailsPanel.java=UTF-8
+encoding//src/view/recepti/ReceptiSearchPanel.java=UTF-8
+encoding//src/view/report/ReportPanel.java=UTF-8
